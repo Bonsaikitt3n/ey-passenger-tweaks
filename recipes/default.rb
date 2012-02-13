@@ -12,20 +12,6 @@ if node[:environment][:framework_env] == 'production'
       message "changing passenger settings"
     end
 
-    service "nginx" do
-      supports :restart => true
-      action :enable
-    end
-
-    template "/etc/nginx/stack.conf" do
-      owner node[:owner_name]
-      group node[:owner_name]
-      mode 0644
-      source "stack.conf.erb"
-      variables({:worker_count => worker_count})
-      notifies :restart, resources(:service => 'nginx')
-    end
-
     cron "passenger_monitor_#{app_name}" do
       minute  '*'
       hour    '*'
